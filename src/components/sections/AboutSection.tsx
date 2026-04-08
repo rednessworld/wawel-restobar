@@ -259,7 +259,7 @@ export default function AboutSection() {
                 }}
               >
                 <Image
-                  src="/images/interior2.jpg"
+                  src="/images/interior.jpg"
                   alt="Interior acogedor de Wawel Restó en Barcelona"
                   fill
                   className="object-cover"
@@ -269,6 +269,30 @@ export default function AboutSection() {
                 <div
                   style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(200,130,42,0.06)' }}
                   aria-hidden="true"
+                />
+              </div>
+
+              {/* Exterior inset photo — overlapping bottom-right corner */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '-24px',
+                  right: '-20px',
+                  width: '42%',
+                  aspectRatio: '4/3',
+                  border: '3px solid var(--color-background)',
+                  borderRadius: '2px',
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
+                  zIndex: 4,
+                }}
+              >
+                <Image
+                  src="/images/exterior.jpg"
+                  alt="Exterior de Wawel Restó"
+                  fill
+                  className="object-cover"
+                  sizes="25vw"
                 />
               </div>
 
@@ -286,7 +310,7 @@ export default function AboutSection() {
                   letterSpacing: '0.05em',
                   padding: '6px 16px',
                   borderRadius: '1px',
-                  zIndex: 3,
+                  zIndex: 5,
                 }}
               >
                 🇵🇱 Kuchnia polska

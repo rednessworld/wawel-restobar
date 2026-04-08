@@ -12,42 +12,59 @@ type NavSection = 'about' | 'menu' | 'gallery' | 'reservations' | 'location';
 const LEFT_LINKS: NavSection[] = ['about', 'menu', 'gallery'];
 const RIGHT_LINKS: NavSection[] = ['reservations', 'location'];
 
+const WOOD_STYLE: React.CSSProperties = {
+  backgroundColor: '#2C1810',
+  backgroundImage: [
+    'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 3px)',
+    'repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,0,0,0.08) 40px, rgba(0,0,0,0.08) 41px)',
+  ].join(', '),
+};
+
+const LINK_STYLE: React.CSSProperties = {
+  color: '#F2E8D5',
+  fontFamily: 'var(--font-navbar)',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '11px',
+  letterSpacing: '0.15em',
+  textTransform: 'uppercase',
+  background: 'none',
+  border: 'none',
+  cursor: 'pointer',
+  padding: '0 14px',
+  height: '56px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  transition: 'color 200ms ease-out',
+  whiteSpace: 'nowrap',
+};
+
 export default function Navbar() {
   const { language, setLanguage } = useLanguage();
   const tr = t(language);
 
-  // pinned: false = bottom, true = top (after scrolling past hero)
-  const [pinned, setPinned] = useState(false);
   const [visible, setVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   const languages: Language[] = ['es', 'en', 'cat'];
 
   useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener('resize', check);
     setLoaded(true);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
   useEffect(() => {
-    let lastY = 0;
-
+    let lastY = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      const heroH = window.innerHeight;
-
-      // Transition from bottom to top when scrolled past hero
-      setPinned(y > heroH * 0.8);
-
-      // Hide/show on scroll direction (only when pinned to top)
-      if (y > heroH * 0.8) {
-        setVisible(y < lastY || y < heroH);
-      } else {
-        setVisible(true);
-      }
-
+      setVisible(y < lastY || y < 80);
       lastY = y;
     };
-
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -66,30 +83,14 @@ export default function Navbar() {
     setMenuOpen(false);
   }, []);
 
-  // Shared link style
-  const linkStyle: React.CSSProperties = {
-    color: 'rgba(242,232,213,0.75)',
-    fontFamily: 'var(--font-heading)',
-    fontStyle: 'italic',
-    fontSize: 'clamp(13px, 1.1vw, 16px)',
-    letterSpacing: '0.05em',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    padding: '4px 8px',
-    transition: 'color 180ms ease-out',
-    whiteSpace: 'nowrap',
-  };
-
   if (!loaded) return null;
 
   return (
     <>
-      {/* ── Main Navbar ──────────────────────────────────────────────────── */}
       <motion.nav
         initial={false}
         animate={{
-          y: visible ? 0 : (pinned ? -80 : 80),
+          y: visible ? 0 : 80,
           opacity: visible ? 1 : 0,
         }}
         transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] as const }}
@@ -97,271 +98,255 @@ export default function Navbar() {
           position: 'fixed',
           left: 0,
           right: 0,
+          bottom: '16px',
           zIndex: 50,
-          // Bottom when over hero, top when scrolled
-          ...(pinned
-            ? { top: 0, bottom: 'auto' }
-            : { bottom: 0, top: 'auto' }
-          ),
+          pointerEvents: 'none',
         }}
         role="navigation"
         aria-label="Navegación principal"
       >
-        {/* Wood texture bar */}
+        {/* ── Centered floating bar ── */}
         <div
-          className="texture-wood"
           style={{
+            ...WOOD_STYLE,
+            maxWidth: '960px',
+            margin: '0 auto',
+            borderRadius: '8px',
             position: 'relative',
-            borderTop: pinned ? 'none' : '1px solid rgba(200,130,42,0.2)',
-            borderBottom: pinned ? '1px solid rgba(200,130,42,0.2)' : 'none',
-            boxShadow: pinned
-              ? '0 2px 24px rgba(0,0,0,0.45)'
-              : '0 -4px 32px rgba(0,0,0,0.5)',
+            overflow: 'visible',
+            pointerEvents: 'auto',
+            border: '1px solid rgba(200,130,42,0.25)',
+            boxShadow: '0 -2px 40px rgba(0,0,0,0.55), 0 4px 24px rgba(0,0,0,0.4)',
           }}
         >
-          {/* Desktop layout */}
+          {/* ── Medallion — floats above bar center ── */}
           <div
-            className="hidden lg:flex"
             style={{
-              maxWidth: '1400px',
-              margin: '0 auto',
-              padding: '0 40px',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 0,
-              height: '64px',
+              position: 'absolute',
+              left: '50%',
+              top: '0%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 20,
+              pointerEvents: 'auto',
             }}
           >
-            {/* Left links */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'flex-end', paddingRight: '48px' }}>
-              {LEFT_LINKS.map((section) => (
-                <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  style={linkStyle}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-accent)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(242,232,213,0.75)'; }}
-                >
-                  {tr.nav[section]}
-                </button>
-              ))}
-            </div>
-
-            {/* Center logo — elevated medallion */}
-            <div
+            <button
+              onClick={handleLogoClick}
+              aria-label="Wawel Restó — volver al inicio"
               style={{
-                position: 'relative',
-                flexShrink: 0,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                border: '1.5px solid #C8822A',
+                boxShadow: '0 0 0 4px rgba(200,130,42,0.15), 0 6px 24px rgba(0,0,0,0.65)',
+                ...WOOD_STYLE,
+                cursor: 'pointer',
+                padding: 0,
+                overflow: 'hidden',
+                flexShrink: 0,
+                transition: 'box-shadow 200ms ease-out, transform 160ms ease-out',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 0 4px rgba(200,130,42,0.35), 0 8px 28px rgba(0,0,0,0.7)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 0 4px rgba(200,130,42,0.15), 0 6px 24px rgba(0,0,0,0.65)';
+              }}
+              onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.96)'; }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+            >
+              <div style={{ position: 'relative', width: '54px', height: '54px' }}>
+                <Image
+                  src="/images/Logo.png"
+                  alt="Wawel Restó"
+                  fill
+                  style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
+                  priority
+                />
+              </div>
+            </button>
+          </div>
+
+          {/* ── DESKTOP layout ── */}
+          {!isMobile && (
+            <div
+              style={{
+                padding: '0 24px',
+                display: 'flex',
+                alignItems: 'center',
+                height: '56px',
               }}
             >
-              {/* Medallion ring */}
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '88px',
-                  height: '88px',
-                  borderRadius: '50%',
-                  backgroundColor: '#2C1810',
-                  border: '1px solid rgba(200,130,42,0.35)',
-                  boxShadow: '0 0 0 1px rgba(200,130,42,0.12), 0 4px 20px rgba(0,0,0,0.6)',
-                  bottom: pinned ? '-12px' : '12px',
-                  transition: 'bottom 0.35s cubic-bezier(0.32, 0.72, 0, 1)',
-                }}
-                aria-hidden="true"
-              />
+              {/* Left: Nosotros · Menú · Galería */}
+              <div style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'flex-end', paddingRight: '52px' }}>
+                {LEFT_LINKS.map((section) => (
+                  <button
+                    key={section}
+                    onClick={() => scrollToSection(section)}
+                    style={LINK_STYLE}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = '#C8822A'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = '#F2E8D5'; }}
+                  >
+                    {tr.nav[section]}
+                  </button>
+                ))}
+              </div>
+
+              {/* Center spacer — 80px gap for medallion */}
+              <div style={{ width: '80px', flexShrink: 0 }} aria-hidden="true" />
+
+              {/* Right: Reservas · Contacto · ES EN CAT */}
+              <div style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'flex-start', paddingLeft: '52px' }}>
+                {RIGHT_LINKS.map((section) => (
+                  <button
+                    key={section}
+                    onClick={() => scrollToSection(section)}
+                    style={LINK_STYLE}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = '#C8822A'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = '#F2E8D5'; }}
+                  >
+                    {tr.nav[section]}
+                  </button>
+                ))}
+
+                {/* Divider */}
+                <div
+                  style={{ width: '1px', height: '14px', backgroundColor: 'rgba(200,130,42,0.3)', margin: '0 8px', flexShrink: 0 }}
+                  aria-hidden="true"
+                />
+
+                {/* Language switcher */}
+                <div style={{ display: 'flex', gap: '2px' }}>
+                  {languages.map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => setLanguage(lang)}
+                      style={{
+                        fontFamily: 'var(--font-navbar)',
+                        fontSize: '10px',
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        padding: '0 6px',
+                        height: '44px',
+                        minWidth: '32px',
+                        border: 'none',
+                        borderRadius: '1px',
+                        cursor: 'pointer',
+                        transition: 'color 200ms ease-out, background 200ms ease-out',
+                        color: language === lang ? '#C8822A' : 'rgba(242,232,213,0.4)',
+                        backgroundColor: language === lang ? 'rgba(200,130,42,0.1)' : 'transparent',
+                      }}
+                      aria-pressed={language === lang}
+                      aria-label={`Cambiar idioma a ${lang.toUpperCase()}`}
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── MOBILE layout ── */}
+          {isMobile && (
+            <div
+              style={{
+                padding: '0 20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                height: '56px',
+              }}
+            >
+              {/* Mobile logo */}
               <button
                 onClick={handleLogoClick}
-                aria-label="Wawel Restó — volver al inicio"
-                style={{
-                  position: 'relative',
-                  width: '72px',
-                  height: '72px',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                  bottom: pinned ? '-8px' : '14px',
-                  transition: 'bottom 0.35s cubic-bezier(0.32, 0.72, 0, 1)',
-                  zIndex: 2,
-                }}
+                aria-label="Wawel Restó"
+                style={{ position: 'relative', width: '44px', height: '34px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 <Image
                   src="/images/Logo.png"
                   alt="Wawel Restó"
                   fill
-                  className="object-contain"
-                  style={{ filter: 'brightness(0) invert(1)' }}
+                  style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
                   priority
                 />
               </button>
-            </div>
 
-            {/* Right links + language */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'flex-start', paddingLeft: '48px' }}>
-              {RIGHT_LINKS.map((section) => (
+              {/* Language + hamburger */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div style={{ display: 'flex' }}>
+                  {languages.map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => setLanguage(lang)}
+                      style={{
+                        fontFamily: 'var(--font-navbar)',
+                        fontSize: '10px',
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        padding: '0 6px',
+                        minHeight: '44px',
+                        minWidth: '36px',
+                        border: 'none',
+                        background: 'transparent',
+                        cursor: 'pointer',
+                        color: language === lang ? '#C8822A' : 'rgba(242,232,213,0.35)',
+                        transition: 'color 200ms ease-out',
+                      }}
+                      aria-pressed={language === lang}
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
+
                 <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  style={linkStyle}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-accent)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(242,232,213,0.75)'; }}
+                  onClick={() => setMenuOpen((o) => !o)}
+                  aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                  aria-expanded={menuOpen}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    padding: '8px', minWidth: '44px', minHeight: '44px',
+                    display: 'flex', flexDirection: 'column', gap: '5px',
+                    alignItems: 'center', justifyContent: 'center',
+                  }}
                 >
-                  {tr.nav[section]}
+                  {[
+                    menuOpen ? 'rotate(45deg) translateY(6.5px)' : 'none',
+                    null,
+                    menuOpen ? 'rotate(-45deg) translateY(-6.5px)' : 'none',
+                  ].map((transform, i) => (
+                    <span
+                      key={i}
+                      style={{
+                        display: 'block', height: '1.5px', width: '22px',
+                        backgroundColor: 'rgba(242,232,213,0.85)',
+                        transition: transform !== null ? 'transform 280ms ease-out' : 'opacity 200ms',
+                        ...(transform !== null ? { transform } : { opacity: menuOpen ? 0 : 1 }),
+                      }}
+                    />
+                  ))}
                 </button>
-              ))}
-
-              {/* Divider */}
-              <div style={{ width: '1px', height: '18px', backgroundColor: 'rgba(200,130,42,0.2)', margin: '0 8px' }} aria-hidden="true" />
-
-              {/* Language switcher */}
-              <div style={{ display: 'flex', gap: '2px' }}>
-                {languages.map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setLanguage(lang)}
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '10px',
-                      letterSpacing: '0.12em',
-                      textTransform: 'uppercase',
-                      padding: '3px 6px',
-                      border: 'none',
-                      borderRadius: '1px',
-                      cursor: 'pointer',
-                      transition: 'color 180ms ease-out, background 180ms ease-out',
-                      color: language === lang ? 'var(--color-accent)' : 'rgba(242,232,213,0.35)',
-                      backgroundColor: language === lang ? 'rgba(200,130,42,0.1)' : 'transparent',
-                    }}
-                    aria-pressed={language === lang}
-                    aria-label={`Cambiar idioma a ${lang.toUpperCase()}`}
-                  >
-                    {lang}
-                  </button>
-                ))}
               </div>
             </div>
-          </div>
-
-          {/* Mobile layout */}
-          <div
-            className="flex lg:hidden"
-            style={{
-              padding: '0 20px',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              height: '56px',
-            }}
-          >
-            {/* Mobile logo */}
-            <button
-              onClick={handleLogoClick}
-              aria-label="Wawel Restó"
-              style={{ position: 'relative', width: '52px', height: '40px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-            >
-              <Image
-                src="/images/Logo.png"
-                alt="Wawel Restó"
-                fill
-                className="object-contain"
-                style={{ filter: 'brightness(0) invert(1)' }}
-                priority
-              />
-            </button>
-
-            {/* Language + Hamburger */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ display: 'flex', gap: '2px' }}>
-                {languages.map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setLanguage(lang)}
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.625rem',
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      padding: '0 6px',
-                      minHeight: '44px',
-                      minWidth: '36px',
-                      border: 'none',
-                      borderRadius: '1px',
-                      cursor: 'pointer',
-                      color: language === lang ? 'var(--color-accent)' : 'rgba(242,232,213,0.35)',
-                      backgroundColor: 'transparent',
-                    }}
-                    aria-pressed={language === lang}
-                  >
-                    {lang}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-                aria-expanded={menuOpen}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '8px',
-                  minWidth: '44px',
-                  minHeight: '44px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '5px',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <span
-                  style={{
-                    display: 'block',
-                    height: '1.5px',
-                    width: '22px',
-                    backgroundColor: 'rgba(242,232,213,0.85)',
-                    transition: 'transform 280ms ease-out, opacity 200ms',
-                    transform: menuOpen ? 'rotate(45deg) translateY(6.5px)' : 'none',
-                  }}
-                />
-                <span
-                  style={{
-                    display: 'block',
-                    height: '1.5px',
-                    width: '22px',
-                    backgroundColor: 'rgba(242,232,213,0.85)',
-                    opacity: menuOpen ? 0 : 1,
-                    transition: 'opacity 200ms',
-                  }}
-                />
-                <span
-                  style={{
-                    display: 'block',
-                    height: '1.5px',
-                    width: '22px',
-                    backgroundColor: 'rgba(242,232,213,0.85)',
-                    transition: 'transform 280ms ease-out',
-                    transform: menuOpen ? 'rotate(-45deg) translateY(-6.5px)' : 'none',
-                  }}
-                />
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </motion.nav>
 
-      {/* ── Mobile fullscreen drawer — slides from bottom ─────────────────── */}
+      {/* ── Mobile fullscreen drawer ── */}
       <AnimatePresence>
-        {menuOpen && (
+        {menuOpen && isMobile && (
           <motion.div
-            initial={{ y: '100%', opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '100%', opacity: 0 }}
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
             transition={{ duration: 0.38, ease: [0.32, 0.72, 0, 1] as const }}
             style={{
+              ...WOOD_STYLE,
               position: 'fixed',
               inset: 0,
               zIndex: 49,
@@ -369,13 +354,14 @@ export default function Navbar() {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px',
+              gap: '4px',
               paddingBottom: '80px',
             }}
-            className="texture-wood"
           >
-            {/* Top amber border */}
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', backgroundColor: 'rgba(200,130,42,0.2)' }} aria-hidden="true" />
+            <div
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', backgroundColor: 'rgba(200,130,42,0.25)' }}
+              aria-hidden="true"
+            />
 
             {([...LEFT_LINKS, ...RIGHT_LINKS] as NavSection[]).map((section, i) => (
               <motion.button
@@ -385,26 +371,21 @@ export default function Navbar() {
                 transition={{ delay: i * 0.055, duration: 0.4, ease: [0.23, 1, 0.32, 1] as const }}
                 onClick={() => scrollToSection(section)}
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
+                  background: 'none', border: 'none', cursor: 'pointer',
                   color: 'rgba(242,232,213,0.85)',
-                  fontFamily: 'var(--font-heading)',
-                  fontStyle: 'italic',
+                  fontFamily: 'var(--font-heading)', fontStyle: 'italic',
                   fontSize: 'clamp(28px, 7vw, 40px)',
                   letterSpacing: '0.04em',
-                  padding: '10px 24px',
-                  minHeight: '52px',
-                  transition: 'color 180ms ease-out',
+                  padding: '10px 24px', minHeight: '52px',
+                  transition: 'color 200ms ease-out',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-accent)'; }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#C8822A'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(242,232,213,0.85)'; }}
               >
                 {tr.nav[section]}
               </motion.button>
             ))}
 
-            {/* Reservation CTA */}
             <motion.a
               href="tel:+34934579550"
               initial={{ opacity: 0, y: 12 }}
@@ -419,7 +400,7 @@ export default function Navbar() {
                 fontSize: '11px',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                fontFamily: 'var(--font-body)',
+                fontFamily: 'var(--font-navbar)',
                 textDecoration: 'none',
                 borderRadius: '1px',
               }}

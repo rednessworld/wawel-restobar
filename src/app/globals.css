@@ -2,9 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fonts injected via next/font/google in layout.tsx — no @import needed */
+/* ─── Custom local fonts ──────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'WawelHeading';
+  src: url('/fonts/Headers_Font2.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'WawelBody';
+  src: url('/fonts/All_Polish_Font.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'WawelNavbar';
+  src: url('/fonts/Polish_Nav_Bar_Font.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
+  --font-heading: 'WawelHeading', 'Cormorant Garamond', serif;
+  --font-body: 'WawelBody', 'DM Sans', sans-serif;
+  --font-navbar: 'WawelNavbar', sans-serif;
   --color-primary: #1C1612;
   --color-secondary: #F2E8D5;
   --color-accent: #C8822A;

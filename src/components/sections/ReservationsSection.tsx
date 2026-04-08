@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
@@ -82,11 +83,22 @@ export default function ReservationsSection() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section id="reservations" className="texture-wood" style={{ padding: 'clamp(72px, 10vw, 112px) 0' }}>
+    <section id="reservations" className="texture-wood" style={{ padding: 'clamp(72px, 10vw, 112px) 0', position: 'relative' }}>
+      {/* Background photo — exterior, dimmed */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} aria-hidden="true">
+        <Image
+          src="/images/exterior.jpg"
+          alt=""
+          fill
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
+          sizes="100vw"
+        />
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(28,14,8,0.82)' }} />
+      </div>
       {/* Amber top border */}
-      <div style={{ height: '1px', backgroundColor: 'rgba(200,130,42,0.2)', marginBottom: '0' }} aria-hidden="true" />
+      <div style={{ position: 'relative', zIndex: 1, height: '1px', backgroundColor: 'rgba(200,130,42,0.2)', marginBottom: '0' }} aria-hidden="true" />
 
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(72px, 10vw, 112px) clamp(24px, 5vw, 64px) 0' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(72px, 10vw, 112px) clamp(24px, 5vw, 64px) 0', position: 'relative', zIndex: 1 }}>
 
         {/* Header */}
         <motion.p

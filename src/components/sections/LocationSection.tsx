@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
@@ -41,8 +42,22 @@ export default function LocationSection() {
   const lc = tr.location;
 
   return (
-    <section id="location" className="texture-warm py-20 md:py-28 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section id="location" className="texture-warm py-20 md:py-28 px-6" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Castle photo — subtle decorative background right side */}
+      <div
+        style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '35%', pointerEvents: 'none', zIndex: 0 }}
+        aria-hidden="true"
+      >
+        <Image
+          src="/images/castle1.jpg"
+          alt=""
+          fill
+          style={{ objectFit: 'cover', objectPosition: 'left center' }}
+          sizes="35vw"
+        />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, var(--color-background) 0%, rgba(242,232,213,0.7) 40%, rgba(242,232,213,0.25) 100%)' }} />
+      </div>
+      <div className="max-w-6xl mx-auto" style={{ position: 'relative', zIndex: 1 }}>
 
         {/* Header */}
         <motion.p

@@ -7,14 +7,24 @@ import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 
 const GALLERY_PHOTOS = [
-  { src: '/images/food17.jpg', caption: 'Pierogi Ruskie' },
+  { src: '/images/food10.jpg', caption: 'Cocina polaca' },
+  { src: '/images/food11.jpg', caption: 'Platos caseros' },
+  { src: '/images/food12.jpg', caption: 'Sabores de Polonia' },
+  { src: '/images/food13.jpg', caption: 'Recetas de familia' },
+  { src: '/images/food14.jpg', caption: 'Ingredientes frescos' },
+  { src: '/images/food15.jpg', caption: 'Especialidades del día' },
+  { src: '/images/dessert4.jpg', caption: 'Postres artesanales' },
+  { src: '/images/dessert5.jpg', caption: 'Szarlotka' },
+  { src: '/images/drink1.jpg', caption: 'Cervezas polacas' },
+  { src: '/images/drink2.jpg', caption: 'Żywiec Premium' },
+  { src: '/images/drink3.jpg', caption: 'Selección de bebidas' },
+  { src: '/images/drink4.jpg', caption: 'Vodka polaco' },
   { src: '/images/interior2.jpg', caption: 'Ambiente Wawel' },
-  { src: '/images/food18.jpg', caption: 'Placki Ziemniaczane' },
-  { src: '/images/ldrink4.jpg', caption: 'Cerveza polaca artesanal' },
-  { src: '/images/food19.jpg', caption: 'Pollo Kiev' },
+  { src: '/images/castle1.jpg', caption: 'Castillo de Wawel' },
+  { src: '/images/castle2.jpg', caption: 'Cracovia, Polonia' },
 ];
 
-const ROTATIONS = [-3, 2, -1.5, 3, -2];
+const ROTATIONS = [-3, 2, -1.5, 3, -2, 1.5, -2.5, 3.5, -1, 2.5, -3, 1, -2, 3, -1.5];
 
 const VIDEOS = [
   '/videos/video1.mp4',

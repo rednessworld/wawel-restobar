@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
@@ -39,7 +40,7 @@ export default function HeroSection() {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'url(/images/Hero.png)',
+          backgroundImage: 'url(/images/hero-bg.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -53,7 +54,7 @@ export default function HeroSection() {
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(to bottom, rgba(28,22,18,0.35) 0%, rgba(28,22,18,0.05) 35%, rgba(28,22,18,0.05) 55%, rgba(28,22,18,0.75) 100%)',
+            'linear-gradient(to bottom, rgba(28,22,18,0.45) 0%, rgba(28,22,18,0.1) 30%, rgba(28,22,18,0.1) 50%, rgba(28,22,18,0.85) 100%)',
         }}
         aria-hidden="true"
       />
@@ -72,6 +73,45 @@ export default function HeroSection() {
           maxWidth: '900px',
         }}
       >
+        {/* Featured center photo — Hero.png */}
+        <motion.div
+          initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] as const, delay: 0.15 }}
+          style={{ position: 'relative', width: 'clamp(220px, 38vw, 440px)', aspectRatio: '3/4', flexShrink: 0 }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              border: '1px solid rgba(200,130,42,0.5)',
+              borderRadius: '2px',
+              zIndex: 2,
+              pointerEvents: 'none',
+            }}
+            aria-hidden="true"
+          />
+          <div
+            style={{
+              position: 'absolute',
+              inset: '-8px',
+              border: '1px solid rgba(200,130,42,0.18)',
+              borderRadius: '2px',
+              zIndex: 1,
+              pointerEvents: 'none',
+            }}
+            aria-hidden="true"
+          />
+          <Image
+            src="/images/Hero.png"
+            alt="Pierogi Wawel Restó"
+            fill
+            style={{ objectFit: 'cover', borderRadius: '2px' }}
+            priority
+            sizes="(max-width: 768px) 220px, 440px"
+          />
+        </motion.div>
+
         {/* Eyebrow label */}
         <motion.p
           {...fadeUp}
