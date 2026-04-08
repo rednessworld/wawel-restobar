@@ -43,7 +43,6 @@ export default function Navbar() {
   const { language, setLanguage } = useLanguage();
   const tr = t(language);
 
-  const [visible, setVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -56,17 +55,6 @@ export default function Navbar() {
     window.addEventListener('resize', check);
     setLoaded(true);
     return () => window.removeEventListener('resize', check);
-  }, []);
-
-  useEffect(() => {
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      setVisible(y < lastY || y < 80);
-      lastY = y;
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const scrollToSection = useCallback((section: string) => {
@@ -87,20 +75,16 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.nav
-        initial={false}
-        animate={{
-          y: visible ? 0 : 80,
-          opacity: visible ? 1 : 0,
-        }}
-        transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] as const }}
+      <nav
         style={{
           position: 'fixed',
-          left: 0,
-          right: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
           bottom: '16px',
-          zIndex: 50,
+          zIndex: 9999,
           pointerEvents: 'none',
+          width: '960px',
+          maxWidth: 'calc(100vw - 32px)',
         }}
         role="navigation"
         aria-label="Navegación principal"
@@ -109,8 +93,6 @@ export default function Navbar() {
         <div
           style={{
             ...WOOD_STYLE,
-            maxWidth: '960px',
-            margin: '0 auto',
             borderRadius: '8px',
             position: 'relative',
             overflow: 'visible',
@@ -335,7 +317,7 @@ export default function Navbar() {
             </div>
           )}
         </div>
-      </motion.nav>
+      </nav>
 
       {/* ── Mobile fullscreen drawer ── */}
       <AnimatePresence>

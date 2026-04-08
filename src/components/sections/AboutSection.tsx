@@ -69,7 +69,19 @@ export default function AboutSection() {
 
   return (
     <>
-      <section id="about" className="texture-warm" style={{ padding: 'clamp(72px, 10vw, 112px) 0', overflow: 'hidden', position: 'relative' }}>
+      <section id="about" style={{ padding: 'clamp(72px, 10vw, 112px) 0', overflow: 'hidden', position: 'relative' }}>
+
+        {/* Full-bleed castle2.jpg background with dark overlay */}
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} aria-hidden="true">
+          <Image
+            src="/images/castle2.jpg"
+            alt=""
+            fill
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
+            sizes="100vw"
+          />
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(20,12,7,0.80)' }} />
+        </div>
 
         {/* Scattered ink illustrations — positioned absolutely */}
         <motion.div {...fadeIn(0.3)} style={{ position: 'absolute', top: '8%', right: '3%', transform: 'rotate(12deg)', zIndex: 1 }}>
@@ -103,7 +115,7 @@ export default function AboutSection() {
             {...fadeUp(0.1)}
             className="text-center"
             style={{
-              color: 'var(--color-primary)',
+              color: '#F2E8D5',
               fontFamily: 'var(--font-heading)',
               fontStyle: 'italic',
               fontWeight: 400,
@@ -145,7 +157,7 @@ export default function AboutSection() {
               <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '22px' }}>
                 <p
                   style={{
-                    color: 'var(--color-primary)',
+                    color: 'rgba(242,232,213,0.85)',
                     fontFamily: 'var(--font-body)',
                     fontSize: 'clamp(0.9375rem, 1.5vw, 1.0625rem)',
                     lineHeight: 1.78,
@@ -157,7 +169,7 @@ export default function AboutSection() {
                 </p>
                 <p
                   style={{
-                    color: 'var(--color-primary)',
+                    color: 'rgba(242,232,213,0.85)',
                     fontFamily: 'var(--font-body)',
                     fontSize: 'clamp(0.9375rem, 1.5vw, 1.0625rem)',
                     lineHeight: 1.78,
@@ -199,8 +211,8 @@ export default function AboutSection() {
                     display: 'inline-block',
                     alignSelf: 'flex-start',
                     marginTop: '4px',
-                    border: '1px solid var(--color-primary)',
-                    color: 'var(--color-primary)',
+                    border: '1px solid rgba(242,232,213,0.65)',
+                    color: '#F2E8D5',
                     padding: '11px 32px',
                     fontSize: '11px',
                     letterSpacing: '0.2em',
@@ -212,12 +224,12 @@ export default function AboutSection() {
                     transition: 'background 200ms ease-out, color 200ms ease-out, transform 160ms ease-out',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--color-primary)';
-                    e.currentTarget.style.color = '#F2E8D5';
+                    e.currentTarget.style.backgroundColor = 'rgba(242,232,213,0.12)';
+                    e.currentTarget.style.borderColor = 'rgba(242,232,213,0.9)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--color-primary)';
+                    e.currentTarget.style.borderColor = 'rgba(242,232,213,0.65)';
                   }}
                   onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.97)'; }}
                   onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}

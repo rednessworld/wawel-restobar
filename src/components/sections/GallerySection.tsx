@@ -1,35 +1,75 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 import { t } from '@/lib/translations';
 
-const GALLERY_PHOTOS = [
-  { src: '/images/food10.jpg', caption: 'Cocina polaca' },
-  { src: '/images/food11.jpg', caption: 'Platos caseros' },
-  { src: '/images/food12.jpg', caption: 'Sabores de Polonia' },
-  { src: '/images/food13.jpg', caption: 'Recetas de familia' },
-  { src: '/images/food14.jpg', caption: 'Ingredientes frescos' },
-  { src: '/images/food15.jpg', caption: 'Especialidades del día' },
-  { src: '/images/dessert4.jpg', caption: 'Postres artesanales' },
-  { src: '/images/dessert5.jpg', caption: 'Szarlotka' },
-  { src: '/images/drink1.jpg', caption: 'Cervezas polacas' },
-  { src: '/images/drink2.jpg', caption: 'Żywiec Premium' },
-  { src: '/images/drink3.jpg', caption: 'Selección de bebidas' },
-  { src: '/images/drink4.jpg', caption: 'Vodka polaco' },
-  { src: '/images/interior2.jpg', caption: 'Ambiente Wawel' },
-  { src: '/images/castle1.jpg', caption: 'Castillo de Wawel' },
-  { src: '/images/castle2.jpg', caption: 'Cracovia, Polonia' },
+const IMAGES = [
+  '/images/food.jpg',
+  '/images/food1.jpg',
+  '/images/food2.jpg',
+  '/images/food3.jpg',
+  '/images/food4.jpg',
+  '/images/food5.jpg',
+  '/images/food6.jpg',
+  '/images/food9.jpg',
+  '/images/food10.jpg',
+  '/images/food11.jpg',
+  '/images/food12.jpg',
+  '/images/food13.jpg',
+  '/images/food14.jpg',
+  '/images/food15.jpg',
+  '/images/food16.jpg',
+  '/images/food17.jpg',
+  '/images/food18.jpg',
+  '/images/food19.jpg',
+  '/images/dessert1.jpg',
+  '/images/dessert4.jpg',
+  '/images/dessert5.jpg',
+  '/images/drink1.jpg',
+  '/images/drink2.jpg',
+  '/images/drink3.jpg',
+  '/images/drink4.jpg',
+  '/images/interior.jpg',
+  '/images/interior2.jpg',
+  '/images/exterior.jpg',
+  '/images/castle1.jpg',
+  '/images/castle2.jpg',
 ];
 
-const ROTATIONS = [-3, 2, -1.5, 3, -2, 1.5, -2.5, 3.5, -1, 2.5, -3, 1, -2, 3, -1.5];
-
-const VIDEOS = [
-  '/videos/video1.mp4',
-  '/videos/video2.mp4',
-  '/videos/video3.mp4',
+const IMAGE_ALTS = [
+  'Plato de cocina polaca',
+  'Especialidad de la casa',
+  'Cocina artesanal polaca',
+  'Plato tradicional polaco',
+  'Sabores de Polonia',
+  'Gastronomía polaca',
+  'Plato de temporada',
+  'Cocina casera polaca',
+  'Ingredientes frescos',
+  'Plato del día',
+  'Especialidad Wawel',
+  'Receta tradicional',
+  'Cocina de autor polaca',
+  'Plato principal',
+  'Cocina casera',
+  'Especialidad de la carta',
+  'Plato de degustación',
+  'Gastronomía artesanal',
+  'Postre artesanal',
+  'Dulce polaco',
+  'Pastelería de Polonia',
+  'Cerveza polaca Żywiec',
+  'Bebidas seleccionadas',
+  'Bebidas y cócteles',
+  'Selección de bebidas',
+  'Interior acogedor de Wawel Restó',
+  'Salón de Wawel Restó',
+  'Fachada de Wawel Restó, Barcelona',
+  'Castillo de Wawel, Cracovia',
+  'Paisaje de Cracovia, Polonia',
 ];
 
 export default function GallerySection() {
@@ -38,212 +78,366 @@ export default function GallerySection() {
   const gl = tr.gallery;
   const shouldReduceMotion = useReducedMotion();
 
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+
+  const goPrev = useCallback(() => {
+    setLightboxIndex((i) =>
+      i !== null ? (i - 1 + IMAGES.length) % IMAGES.length : i
+    );
+  }, []);
+
+  const goNext = useCallback(() => {
+    setLightboxIndex((i) =>
+      i !== null ? (i + 1) % IMAGES.length : i
+    );
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSelectedImage(null);
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') goPrev();
+      else if (e.key === 'ArrowRight') goNext();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [closeLightbox, goPrev, goNext]);
+
+  // Body scroll lock + focus management + inert backdrop
+  useEffect(() => {
+    const main = document.querySelector('main');
+    if (lightboxIndex !== null) {
+      document.body.style.overflow = 'hidden';
+      main?.setAttribute('inert', '');
+      // Defer focus until AnimatePresence has rendered the close button
+      const t = setTimeout(() => closeButtonRef.current?.focus(), 30);
+      return () => {
+        clearTimeout(t);
+        document.body.style.overflow = '';
+        main?.removeAttribute('inert');
+      };
+    }
+    document.body.style.overflow = '';
+    main?.removeAttribute('inert');
+    return () => { document.body.style.overflow = ''; };
+  }, [lightboxIndex]);
 
   return (
-    <section id="gallery" className="texture-dark" style={{ padding: 'clamp(72px, 10vw, 112px) 0', overflow: 'hidden' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 64px)' }}>
+    <>
+      <style>{`
+        .wawel-gallery {
+          columns: 4;
+          column-gap: 8px;
+          padding: 0;
+        }
+        @media (max-width: 1023px) {
+          .wawel-gallery { columns: 2; }
+        }
+        @media (max-width: 639px) {
+          .wawel-gallery { columns: 1; }
+        }
+        .wawel-gallery-item {
+          break-inside: avoid;
+          margin-bottom: 8px;
+          overflow: hidden;
+          cursor: pointer;
+          display: block;
+        }
+        .wawel-gallery-item img {
+          transition: transform 350ms cubic-bezier(0.23, 1, 0.32, 1),
+                      filter 350ms ease-out;
+          display: block;
+          width: 100%;
+          height: auto;
+        }
+        .wawel-gallery-item:hover img,
+        .wawel-gallery-item:focus img {
+          transform: scale(1.08);
+          filter: brightness(1.1);
+        }
+        .wawel-gallery-item:focus-visible {
+          outline: 2px solid #C8822A;
+          outline-offset: 2px;
+        }
+      `}</style>
 
-        {/* Header */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="type-eyebrow text-center"
-          style={{ color: 'var(--color-accent)', marginBottom: '12px' }}
-        >
-          Wawel Restó
-        </motion.p>
+      <section id="gallery" style={{ overflow: 'hidden' }}>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-center"
+        {/* ── Section header — parchment background ── */}
+        <div
           style={{
-            color: '#F2E8D5',
-            fontFamily: 'var(--font-heading)',
-            fontStyle: 'italic',
-            fontWeight: 400,
-            fontSize: 'clamp(2.2rem, 4.5vw, 3.6rem)',
-            lineHeight: 1.1,
-            marginBottom: 'clamp(40px, 6vw, 64px)',
+            backgroundColor: 'var(--color-background)',
+            padding: 'clamp(64px, 9vw, 100px) clamp(24px, 5vw, 80px) clamp(36px, 5vw, 52px)',
           }}
         >
-          {gl.title}
-        </motion.h2>
-
-        {/* Polaroid grid */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', marginBottom: 'clamp(56px, 8vw, 96px)' }}>
-          {GALLERY_PHOTOS.map((photo, i) => {
-            const rotation = shouldReduceMotion ? 0 : ROTATIONS[i % ROTATIONS.length];
-            return (
-              <motion.div
-                key={photo.src}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] as const, delay: i * 0.07 }}
-                whileHover={shouldReduceMotion ? {} : { rotate: 0, scale: 1.04, zIndex: 10 }}
-                onClick={() => setSelectedImage(photo.src)}
-                role="button"
-                tabIndex={0}
-                aria-label={`Ver ${photo.caption} en tamaño completo`}
-                onKeyDown={(e) => { if (e.key === 'Enter') setSelectedImage(photo.src); }}
-                style={{
-                  rotate: rotation,
-                  cursor: 'pointer',
-                  backgroundColor: 'var(--color-parchment-mid)',
-                  padding: '8px 8px 36px 8px',
-                  boxShadow: '0 4px 24px rgba(0,0,0,0.45)',
-                  marginTop: i % 2 === 1 ? '-18px' : '0',
-                  transition: 'box-shadow 300ms ease-out',
-                  borderRadius: '1px',
-                }}
-              >
-                <div style={{ position: 'relative', overflow: 'hidden', width: '200px', height: '200px' }}>
-                  <Image
-                    src={photo.src}
-                    alt={photo.caption}
-                    fill
-                    className="object-cover"
-                    sizes="200px"
-                  />
-                </div>
-                <p
-                  className="text-center"
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontStyle: 'italic',
-                    color: 'rgba(28,22,18,0.65)',
-                    fontSize: '13px',
-                    letterSpacing: '0.03em',
-                    marginTop: '10px',
-                  }}
-                >
-                  {photo.caption}
-                </p>
-              </motion.div>
-            );
-          })}
+          <motion.p
+            initial={shouldReduceMotion ? {} : { opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={shouldReduceMotion ? {} : { duration: 0.5 }}
+            className="type-eyebrow text-center"
+            style={{ color: 'var(--color-accent)', marginBottom: '12px' }}
+          >
+            Wawel Restó
+          </motion.p>
+          <motion.h2
+            initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={shouldReduceMotion ? {} : { duration: 0.6, delay: 0.1 }}
+            className="text-center"
+            style={{
+              color: 'var(--color-primary)',
+              fontFamily: 'var(--font-heading)',
+              fontStyle: 'italic',
+              fontWeight: 400,
+              fontSize: 'clamp(2.2rem, 4.5vw, 3.6rem)',
+              lineHeight: 1.1,
+              marginBottom: '10px',
+            }}
+          >
+            {gl.title}
+          </motion.h2>
+          <motion.p
+            initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={shouldReduceMotion ? {} : { duration: 0.5, delay: 0.18 }}
+            className="text-center"
+            style={{
+              color: 'rgba(61,43,31,0.5)',
+              fontFamily: 'var(--font-heading)',
+              fontStyle: 'italic',
+              fontSize: 'clamp(1rem, 1.8vw, 1.2rem)',
+            }}
+          >
+            {gl.subtitle}
+          </motion.p>
         </div>
 
-        {/* Video strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <p
-            className="type-eyebrow text-center"
-            style={{ color: 'rgba(242,232,213,0.35)', marginBottom: '20px' }}
-          >
-            {gl.videosTitle}
-          </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px' }}>
-            {VIDEOS.map((src, i) => (
-              <div
-                key={src}
-                style={{ position: 'relative', overflow: 'hidden', borderRadius: '2px', aspectRatio: '9/16' }}
-              >
-                <video
-                  src={src}
-                  autoPlay={!shouldReduceMotion}
-                  muted
-                  loop
-                  playsInline
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  aria-label={`Video Wawel Restó ${i + 1}`}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(28,22,18,0.5) 0%, transparent 45%)',
-                  }}
-                  aria-hidden="true"
-                />
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
+        {/* ── Full-width masonry grid ── */}
+        <div className="wawel-gallery">
+          {IMAGES.map((src, i) => (
+            <motion.div
+              key={src}
+              className="wawel-gallery-item"
+              initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      duration: 0.5,
+                      ease: [0.23, 1, 0.32, 1] as const,
+                      delay: (i % 4) * 0.055,
+                    }
+              }
+              onClick={() => setLightboxIndex(i)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Ver imagen ${i + 1} en tamaño completo`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setLightboxIndex(i);
+                }
+              }}
+            >
+              <Image
+                src={src}
+                alt={IMAGE_ALTS[i] ?? `Wawel Restó — foto ${i + 1}`}
+                width={800}
+                height={600}
+                sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+                loading="lazy"
+              />
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-      {/* Lightbox */}
+      {/* ── Lightbox ── */}
       <AnimatePresence>
-        {selectedImage && (
+        {lightboxIndex !== null && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Galería de fotos — Wawel Restó"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
+            transition={{ duration: 0.18 }}
             style={{
               position: 'fixed',
               inset: 0,
-              zIndex: 100,
+              zIndex: 9000,
+              backgroundColor: 'rgba(0,0,0,0.92)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '24px',
-              backgroundColor: 'rgba(20,14,10,0.96)',
             }}
-            onClick={() => setSelectedImage(null)}
+            onClick={closeLightbox}
           >
+            {/* Image */}
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.22 }}
-              style={{ position: 'relative', maxWidth: '900px', width: '100%', maxHeight: '85vh' }}
+              key={lightboxIndex}
+              initial={{ opacity: 0, scale: 0.93 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.93 }}
+              transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] as const }}
               onClick={(e) => e.stopPropagation()}
+              style={{
+                position: 'relative',
+                maxWidth: '90vw',
+                maxHeight: '90vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
               <Image
-                src={selectedImage}
-                alt="Galería Wawel Restó"
-                width={900}
-                height={700}
-                style={{ objectFit: 'contain', width: '100%', height: '100%', maxHeight: '80vh', borderRadius: '2px' }}
-              />
-              <button
-                onClick={() => setSelectedImage(null)}
-                aria-label={gl.close}
+                src={IMAGES[lightboxIndex]}
+                alt={IMAGE_ALTS[lightboxIndex] ?? `Wawel Restó — foto ${lightboxIndex + 1}`}
+                width={1400}
+                height={1050}
                 style={{
-                  position: 'absolute',
-                  top: '12px',
-                  right: '12px',
-                  background: 'rgba(28,22,18,0.7)',
-                  border: '1px solid rgba(200,130,42,0.2)',
-                  color: 'rgba(242,232,213,0.8)',
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '50%',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '16px',
-                  transition: 'color 180ms ease-out',
+                  objectFit: 'contain',
+                  maxWidth: '90vw',
+                  maxHeight: '90vh',
+                  width: 'auto',
+                  height: 'auto',
+                  display: 'block',
+                  borderRadius: '2px',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#F2E8D5'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(242,232,213,0.8)'; }}
-              >
-                ✕
-              </button>
+                priority
+              />
             </motion.div>
+
+            {/* ── Prev ── */}
+            <button
+              onClick={(e) => { e.stopPropagation(); goPrev(); }}
+              aria-label="Imagen anterior"
+              style={{
+                position: 'fixed',
+                left: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                background: 'rgba(20,14,10,0.75)',
+                border: '1px solid rgba(200,130,42,0.3)',
+                color: 'rgba(242,232,213,0.85)',
+                fontSize: '26px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background 160ms ease-out, color 160ms ease-out',
+                zIndex: 9001,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(200,130,42,0.22)';
+                e.currentTarget.style.color = '#F2E8D5';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(20,14,10,0.75)';
+                e.currentTarget.style.color = 'rgba(242,232,213,0.85)';
+              }}
+            >
+              ‹
+            </button>
+
+            {/* ── Next ── */}
+            <button
+              onClick={(e) => { e.stopPropagation(); goNext(); }}
+              aria-label="Imagen siguiente"
+              style={{
+                position: 'fixed',
+                right: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                background: 'rgba(20,14,10,0.75)',
+                border: '1px solid rgba(200,130,42,0.3)',
+                color: 'rgba(242,232,213,0.85)',
+                fontSize: '26px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background 160ms ease-out, color 160ms ease-out',
+                zIndex: 9001,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(200,130,42,0.22)';
+                e.currentTarget.style.color = '#F2E8D5';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(20,14,10,0.75)';
+                e.currentTarget.style.color = 'rgba(242,232,213,0.85)';
+              }}
+            >
+              ›
+            </button>
+
+            {/* ── Close ── */}
+            <button
+              ref={closeButtonRef}
+              onClick={closeLightbox}
+              aria-label="Cerrar galería"
+              style={{
+                position: 'fixed',
+                top: '16px',
+                right: '16px',
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: 'rgba(20,14,10,0.75)',
+                border: '1px solid rgba(200,130,42,0.2)',
+                color: 'rgba(242,232,213,0.75)',
+                fontSize: '16px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'color 160ms ease-out',
+                zIndex: 9001,
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#F2E8D5'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(242,232,213,0.75)'; }}
+            >
+              ✕
+            </button>
+
+            {/* ── Counter ── */}
+            <div
+              aria-live="polite"
+              aria-atomic="true"
+              style={{
+                position: 'fixed',
+                bottom: '20px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                color: 'rgba(242,232,213,0.38)',
+                fontFamily: 'var(--font-body)',
+                fontSize: '11px',
+                letterSpacing: '0.14em',
+                zIndex: 9001,
+                userSelect: 'none',
+              }}
+            >
+              {lightboxIndex + 1} / {IMAGES.length}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </>
   );
 }

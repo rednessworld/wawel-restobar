@@ -76,7 +76,7 @@ const translations = {
       cta: 'Reservar Mesa',
     },
     menu: {
-      title: 'Nuestra Carta Polaca',
+      title: 'Nuestra Carta',
       subtitle: 'Kuchnia polska',
       touchToSee: 'Toca para ver',
       hoverToSee: 'Pasa el ratón',
@@ -160,7 +160,7 @@ const translations = {
       cta: 'Book a Table',
     },
     menu: {
-      title: 'Our Polish Menu',
+      title: 'Our Menu',
       subtitle: 'Kuchnia polska',
       touchToSee: 'Tap to see',
       hoverToSee: 'Hover to see',
@@ -244,7 +244,7 @@ const translations = {
       cta: 'Reservar Taula',
     },
     menu: {
-      title: 'La Nostra Carta Polonesa',
+      title: 'La Nostra Carta',
       subtitle: 'Kuchnia polska',
       touchToSee: 'Toca per veure',
       hoverToSee: 'Passa el ratolí',

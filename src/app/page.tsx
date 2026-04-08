@@ -1,7 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/sections/HeroSection';
-import QuoteSection from '@/components/sections/QuoteSection';
 import AboutSection from '@/components/sections/AboutSection';
 import MenuSection from '@/components/sections/MenuSection';
 import GallerySection from '@/components/sections/GallerySection';
@@ -15,7 +14,6 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <AboutSection />
-      <QuoteSection />
       <MenuSection />
       <GallerySection />
       <ReservationsSection />
