@@ -69,6 +69,10 @@
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   overflow-x: hidden;
@@ -76,6 +80,16 @@ body {
   scroll-behavior: smooth;
   background-color: var(--color-background);
   color: var(--color-text);
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html, * {
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
