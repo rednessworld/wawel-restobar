@@ -398,7 +398,7 @@ export default function MenuSection() {
   const row2 = CARDS.slice(4, 7);
 
   return (
-    <section id="menu" className="texture-warm" style={{ padding: 'clamp(36px, 5vw, 56px) 0', overflow: 'hidden', position: 'relative' }}>
+    <section id="menu" className="texture-warm" style={{ padding: 'clamp(36px, 5vw, 56px) 0 40px', overflow: 'hidden', position: 'relative' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 64px)', position: 'relative', zIndex: 2 }}>
 
         {/* Header */}
@@ -433,7 +433,7 @@ export default function MenuSection() {
         </motion.h2>
 
         {/* Card grid — 4 top, 3 bottom */}
-        <div style={{ border: '1px solid rgba(139,105,20,0.18)', padding: 'clamp(20px, 3vw, 40px)', borderRadius: '2px' }}>
+        <div style={{ border: '1px solid rgba(139,105,20,0.18)', padding: 'clamp(20px, 3vw, 28px)', borderRadius: '2px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
             {/* Row 1 — 4 cards */}

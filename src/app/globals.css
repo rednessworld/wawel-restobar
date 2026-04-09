@@ -5,8 +5,24 @@
 /* ─── Custom local fonts ──────────────────────────────────────────────────── */
 
 @font-face {
+  font-family: 'Qarume';
+  src: url('/fonts/QarumeRegular-MAevw.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'WawelHeading';
   src: url('/fonts/Headers_Font2.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aureva';
+  src: url('/fonts/Aureva.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -29,8 +45,8 @@
 }
 
 :root {
-  --font-heading: 'WawelHeading', 'Cormorant Garamond', serif;
-  --font-body: 'WawelBody', 'DM Sans', sans-serif;
+  --font-heading: 'Qarume', serif;
+  --font-body: 'Aureva', Georgia, serif;
   --font-navbar: 'WawelNavbar', sans-serif;
   --color-primary: #1C1612;
   --color-secondary: #F2E8D5;
@@ -63,7 +79,11 @@ body {
 }
 
 body {
-  font-family: var(--font-body), 'DM Sans', sans-serif;
+  font-family: var(--font-body);
+}
+
+p, li, span, small, label, a, button {
+  font-family: var(--font-body);
 }
 
 *,
@@ -73,9 +93,13 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading), 'Cormorant Garamond', serif;
-  font-optical-sizing: auto;
+  font-family: var(--font-heading);
   text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Smoother rendering on dark backgrounds */
@@ -89,7 +113,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Eyebrow label — all-caps, tracked, accent color. Used above every section heading */
 .type-eyebrow {
-  font-family: var(--font-body), 'DM Sans', sans-serif;
+  font-family: var(--font-body), Georgia, serif;
   font-size: 0.6875rem;   /* 11px — renders in px but scales with browser zoom */
   font-weight: 400;
   letter-spacing: 0.32em;
@@ -99,7 +123,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Body prose — max-width for comfortable reading, correct line-height */
 .type-body {
-  font-family: var(--font-body), 'DM Sans', sans-serif;
+  font-family: var(--font-body), Georgia, serif;
   font-size: clamp(0.9375rem, 1.5vw, 1.0625rem); /* 15–17px fluid */
   font-weight: 300;
   line-height: 1.75;
@@ -215,7 +239,7 @@ section {
   padding: 10px 20px;
   background: var(--color-accent);
   color: #F2E8D5;
-  font-family: var(--font-body), 'DM Sans', sans-serif;
+  font-family: var(--font-body), Georgia, serif;
   font-size: 0.875rem;
   letter-spacing: 0.06em;
   text-decoration: none;

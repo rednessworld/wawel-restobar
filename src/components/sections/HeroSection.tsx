@@ -52,7 +52,7 @@ export default function HeroSection() {
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(to bottom, rgba(28,22,18,0.15) 0%, rgba(28,22,18,0.05) 40%, rgba(28,22,18,0.65) 70%, rgba(28,22,18,0.92) 100%)',
+            'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.70) 100%)',
         }}
         aria-hidden="true"
       />
@@ -88,7 +88,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] as const, delay: 0.25 }}
           style={{
-            color: '#F2E8D5',
+            color: '#C8822A',
             fontFamily: 'var(--font-heading)',
             fontWeight: 400,
             fontStyle: 'italic',
@@ -96,11 +96,10 @@ export default function HeroSection() {
             lineHeight: 1.08,
             letterSpacing: '-0.01em',
             margin: 0,
+            textShadow: '0 0 30px rgba(200,130,42,0.35), 0 0 60px rgba(200,130,42,0.15)',
           }}
         >
-          El alma de Cracovia,
-          <br />
-          en el corazón de Barcelona
+          {tr.hero.headline}
         </motion.h1>
 
         {/* Thin amber rule */}

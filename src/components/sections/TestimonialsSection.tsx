@@ -149,7 +149,7 @@ export default function TestimonialsSection() {
       {/* Google button */}
       <div style={{ display: 'flex', justifyContent: 'center', padding: '0 24px' }}>
         <motion.a
-          href="https://www.google.com/maps/place/Wawel+Restobar/@41.4032562,2.1715731,19z"
+          href="https://www.google.com/maps/place/Wawel+Restobar/@41.4031246,2.1714482,19z/data=!3m1!5s0x12a4a2c252dd8b9f:0xa91e31ef991b20d4!4m8!3m7!1s0x12a4a364b350d22d:0x682e3cc4eae0a541!8m2!3d41.4032562!4d2.1715731!9m1!1b1!16s%2Fg%2F11lk1p5b0k?authuser=0&entry=ttu&g_ep=EgoyMDI2MDQwMS4wIKXMDSoASAFQAw%3D%3D"
           target="_blank"
           rel="noopener noreferrer"
           initial={{ opacity: 0, y: 12 }}

@@ -47,7 +47,7 @@ export default function Navbar() {
   const [isMobile, setIsMobile] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  const languages: Language[] = ['es', 'en', 'cat'];
+  const languages: Language[] = ['es', 'en', 'cat', 'pl'];
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -119,10 +119,10 @@ export default function Navbar() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '80px',
-                height: '80px',
+                width: '100px',
+                height: '100px',
                 borderRadius: '50%',
-                border: '1.5px solid #C8822A',
+                border: '2px solid #C8822A',
                 boxShadow: '0 0 0 4px rgba(200,130,42,0.15), 0 6px 24px rgba(0,0,0,0.65)',
                 ...WOOD_STYLE,
                 cursor: 'pointer',
@@ -140,12 +140,12 @@ export default function Navbar() {
               onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.96)'; }}
               onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
             >
-              <div style={{ position: 'relative', width: '54px', height: '54px' }}>
+              <div style={{ position: 'relative', width: '100px', height: '100px', padding: '10px' }}>
                 <Image
-                  src="/images/Logo.png"
+                  src="/images/LogoNavbar.png"
                   alt="Wawel Restó"
                   fill
-                  style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
+                  style={{ objectFit: 'contain', filter: 'brightness(0.75)', padding: '10px' }}
                   priority
                 />
               </div>
@@ -157,13 +157,14 @@ export default function Navbar() {
             <div
               style={{
                 padding: '0 24px',
-                display: 'flex',
+                display: 'grid',
+                gridTemplateColumns: '1fr auto 1fr',
                 alignItems: 'center',
                 height: '56px',
               }}
             >
               {/* Left: Nosotros · Menú · Galería */}
-              <div style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'flex-end', paddingRight: '52px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', paddingRight: '52px' }}>
                 {LEFT_LINKS.map((section) => (
                   <button
                     key={section}
@@ -177,11 +178,11 @@ export default function Navbar() {
                 ))}
               </div>
 
-              {/* Center spacer — 80px gap for medallion */}
-              <div style={{ width: '80px', flexShrink: 0 }} aria-hidden="true" />
+              {/* Center: 100px medallion placeholder */}
+              <div style={{ width: '100px' }} aria-hidden="true" />
 
-              {/* Right: Reservas · Contacto · ES EN CAT */}
-              <div style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'flex-start', paddingLeft: '52px' }}>
+              {/* Right: Reservas · Contacto · ES EN CAT PL */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', paddingLeft: '52px' }}>
                 {RIGHT_LINKS.map((section) => (
                   <button
                     key={section}

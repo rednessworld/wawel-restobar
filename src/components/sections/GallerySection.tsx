@@ -96,31 +96,27 @@ export default function GallerySection() {
   }, []);
 
   useEffect(() => {
+    if (lightboxIndex === null) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeLightbox();
       else if (e.key === 'ArrowLeft') goPrev();
       else if (e.key === 'ArrowRight') goNext();
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [closeLightbox, goPrev, goNext]);
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [lightboxIndex, closeLightbox, goPrev, goNext]);
 
-  // Body scroll lock + focus management + inert backdrop
+  // Body scroll lock
   useEffect(() => {
-    const main = document.querySelector('main');
     if (lightboxIndex !== null) {
       document.body.style.overflow = 'hidden';
-      main?.setAttribute('inert', '');
-      // Defer focus until AnimatePresence has rendered the close button
       const t = setTimeout(() => closeButtonRef.current?.focus(), 30);
       return () => {
         clearTimeout(t);
         document.body.style.overflow = '';
-        main?.removeAttribute('inert');
       };
     }
     document.body.style.overflow = '';
-    main?.removeAttribute('inert');
     return () => { document.body.style.overflow = ''; };
   }, [lightboxIndex]);
 
@@ -128,19 +124,19 @@ export default function GallerySection() {
     <>
       <style>{`
         .wawel-gallery {
-          columns: 4;
-          column-gap: 8px;
+          columns: 5;
+          column-gap: 4px;
           padding: 0;
         }
         @media (max-width: 1023px) {
-          .wawel-gallery { columns: 2; }
+          .wawel-gallery { columns: 3; }
         }
         @media (max-width: 639px) {
-          .wawel-gallery { columns: 1; }
+          .wawel-gallery { columns: 2; }
         }
         .wawel-gallery-item {
           break-inside: avoid;
-          margin-bottom: 8px;
+          margin-bottom: 4px;
           overflow: hidden;
           cursor: pointer;
           display: block;
@@ -163,13 +159,13 @@ export default function GallerySection() {
         }
       `}</style>
 
-      <section id="gallery" style={{ overflow: 'hidden' }}>
+      <section id="gallery" style={{ overflow: 'hidden', padding: 0 }}>
 
         {/* ── Section header — parchment background ── */}
         <div
           style={{
             backgroundColor: 'var(--color-background)',
-            padding: 'clamp(64px, 9vw, 100px) clamp(24px, 5vw, 80px) clamp(36px, 5vw, 52px)',
+            padding: '40px clamp(24px, 5vw, 80px) clamp(36px, 5vw, 52px)',
           }}
         >
           <motion.p
@@ -394,8 +390,8 @@ export default function GallerySection() {
               aria-label="Cerrar galería"
               style={{
                 position: 'fixed',
-                top: '16px',
-                right: '16px',
+                top: '24px',
+                right: '24px',
                 width: '44px',
                 height: '44px',
                 borderRadius: '50%',
@@ -408,7 +404,7 @@ export default function GallerySection() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'color 160ms ease-out',
-                zIndex: 9001,
+                zIndex: 10001,
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#F2E8D5'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(242,232,213,0.75)'; }}

@@ -154,14 +154,14 @@ export default function AboutSection() {
             >
               <WatercolorBlob />
 
-              <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '22px' }}>
+              <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 <p
                   style={{
                     color: 'rgba(242,232,213,0.85)',
                     fontFamily: 'var(--font-body)',
-                    fontSize: 'clamp(0.9375rem, 1.5vw, 1.0625rem)',
-                    lineHeight: 1.78,
-                    fontWeight: 300,
+                    fontSize: 'clamp(1.125rem, 1.8vw, 1.3125rem)',
+                    lineHeight: 1.85,
+                    fontWeight: 400,
                     maxWidth: '58ch',
                   }}
                 >
@@ -171,161 +171,55 @@ export default function AboutSection() {
                   style={{
                     color: 'rgba(242,232,213,0.85)',
                     fontFamily: 'var(--font-body)',
-                    fontSize: 'clamp(0.9375rem, 1.5vw, 1.0625rem)',
-                    lineHeight: 1.78,
-                    fontWeight: 300,
+                    fontSize: 'clamp(1.125rem, 1.8vw, 1.3125rem)',
+                    lineHeight: 1.85,
+                    fontWeight: 400,
                     maxWidth: '58ch',
                   }}
                 >
                   {ab.body2}
                 </p>
-
-                {/* Google rating badge */}
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    backgroundColor: 'var(--color-primary)',
-                    padding: '12px 20px',
-                    borderRadius: '2px',
-                    alignSelf: 'flex-start',
-                    marginTop: '4px',
-                  }}
-                >
-                  <span aria-hidden="true" style={{ fontSize: '22px' }}>⭐</span>
-                  <div>
-                    <p style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, letterSpacing: '0.04em' }}>
-                      {ab.badge}
-                    </p>
-                    <p style={{ color: 'rgba(242,232,213,0.45)', fontFamily: 'var(--font-body)', fontSize: '11px', marginTop: '2px' }}>
-                      C. de Sicília, 330 · Eixample
-                    </p>
-                  </div>
-                </div>
-
-                {/* CTA */}
-                <a
-                  href="tel:+34934579550"
-                  style={{
-                    display: 'inline-block',
-                    alignSelf: 'flex-start',
-                    marginTop: '4px',
-                    border: '1px solid rgba(242,232,213,0.65)',
-                    color: '#F2E8D5',
-                    padding: '11px 32px',
-                    fontSize: '11px',
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                    fontFamily: 'var(--font-body)',
-                    fontWeight: 400,
-                    textDecoration: 'none',
-                    borderRadius: '1px',
-                    transition: 'background 200ms ease-out, color 200ms ease-out, transform 160ms ease-out',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(242,232,213,0.12)';
-                    e.currentTarget.style.borderColor = 'rgba(242,232,213,0.9)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.borderColor = 'rgba(242,232,213,0.65)';
-                  }}
-                  onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.97)'; }}
-                  onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-                >
-                  {ab.cta}
-                </a>
               </div>
             </motion.div>
 
-            {/* Right — photo with torn organic edge */}
+            {/* Right — photo */}
             <motion.div
               initial={{ opacity: 0, x: shouldReduceMotion ? 0 : 32 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] as const, delay: 0.1 }}
-              style={{ position: 'relative' }}
+              style={{ position: 'relative', zIndex: 2, overflow: 'visible' }}
             >
-              {/* Offset amber shadow */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  transform: 'translate(10px, 10px)',
-                  backgroundColor: 'rgba(200,130,42,0.18)',
-                  clipPath: TORN_CLIP,
-                  borderRadius: '2px',
-                }}
-                aria-hidden="true"
+              <Image
+                src="/images/food12.jpg"
+                alt="Wawel Restobar food"
+                width={600}
+                height={500}
+                style={{ objectFit: 'cover', width: '100%', height: '500px', borderRadius: '4px', display: 'block' }}
               />
 
-              {/* Photo with torn clip-path */}
-              <div
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  aspectRatio: '4/5',
-                  clipPath: TORN_CLIP,
-                  overflow: 'hidden',
-                }}
-              >
-                <Image
-                  src="/images/interior.jpg"
-                  alt="Interior acogedor de Wawel Restó en Barcelona"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                {/* Warm amber tint */}
-                <div
-                  style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(200,130,42,0.06)' }}
-                  aria-hidden="true"
-                />
-              </div>
-
-              {/* Exterior inset photo — overlapping bottom-right corner */}
+              {/* food19 small accent photo — bottom-left overlap */}
               <div
                 style={{
                   position: 'absolute',
-                  bottom: '-24px',
+                  bottom: '-20px',
                   right: '-20px',
-                  width: '42%',
-                  aspectRatio: '4/3',
-                  border: '3px solid var(--color-background)',
-                  borderRadius: '2px',
+                  width: '180px',
+                  height: '140px',
+                  border: '3px solid #C8822A',
+                  borderRadius: '4px',
                   overflow: 'hidden',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
-                  zIndex: 4,
+                  zIndex: 3,
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
                 }}
               >
                 <Image
-                  src="/images/exterior.jpg"
-                  alt="Exterior de Wawel Restó"
+                  src="/images/food19.jpg"
+                  alt="Plato de Wawel Restó"
                   fill
-                  className="object-cover"
-                  sizes="25vw"
+                  style={{ objectFit: 'cover' }}
+                  sizes="180px"
                 />
-              </div>
-
-              {/* Floating Polish label */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '-14px',
-                  left: '-8px',
-                  backgroundColor: 'var(--color-accent-2)',
-                  color: '#F2E8D5',
-                  fontFamily: 'var(--font-heading)',
-                  fontStyle: 'italic',
-                  fontSize: '13px',
-                  letterSpacing: '0.05em',
-                  padding: '6px 16px',
-                  borderRadius: '1px',
-                  zIndex: 5,
-                }}
-              >
-                🇵🇱 Kuchnia polska
               </div>
             </motion.div>
           </div>

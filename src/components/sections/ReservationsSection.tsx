@@ -7,12 +7,10 @@ import { t } from '@/lib/translations';
 
 const HOURS = [
   { dayKey: 'monday', hoursKey: 'mondayHours' },
-  { dayKey: 'tuesdayFriday', hoursKey: 'weekdayHours' },
   { dayKey: 'saturday', hoursKey: 'saturdayHours' },
   { dayKey: 'sunday', hoursKey: 'sundayHours' },
 ] as const;
 
-// Outlined contact card — wood background, cream outline
 function ContactCard({
   href,
   label,
@@ -35,16 +33,16 @@ function ContactCard({
       href={href}
       target={target}
       rel={target ? 'noopener noreferrer' : undefined}
-      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] as const, delay }}
+      transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] as const, delay }}
       style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '12px',
-        padding: 'clamp(28px, 4vw, 44px) clamp(20px, 3vw, 40px)',
+        gap: '8px',
+        padding: '24px',
         border: '1px solid rgba(242,232,213,0.18)',
         borderRadius: '2px',
         textDecoration: 'none',
@@ -66,7 +64,14 @@ function ContactCard({
       <p className="type-eyebrow" style={{ color: 'rgba(242,232,213,0.4)' }}>
         {label}
       </p>
-      <p style={{ color: '#F2E8D5', fontFamily: 'var(--font-heading)', fontStyle: 'italic', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 400, lineHeight: 1 }}>
+      <p style={{
+        color: '#F2E8D5',
+        fontFamily: 'var(--font-heading)',
+        fontStyle: 'italic',
+        fontSize: 'clamp(1.2rem, 2.2vw, 1.7rem)',
+        fontWeight: 400,
+        lineHeight: 1,
+      }}>
         {number}
       </p>
       <p className="type-eyebrow" style={{ color: 'var(--color-accent)' }}>
@@ -83,144 +88,160 @@ export default function ReservationsSection() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section id="reservations" className="texture-wood" style={{ padding: 'clamp(72px, 10vw, 112px) 0', position: 'relative' }}>
-      {/* Background photo — exterior, dimmed */}
+    <section
+      id="reservations"
+      className="texture-wood"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+      }}
+    >
+      {/* Background — interior, dimmed */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} aria-hidden="true">
         <Image
-          src="/images/exterior.jpg"
+          src="/images/interior.jpg"
           alt=""
           fill
           style={{ objectFit: 'cover', objectPosition: 'center' }}
           sizes="100vw"
         />
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(28,14,8,0.82)' }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(20,10,6,0.84)' }} />
       </div>
+
       {/* Amber top border */}
-      <div style={{ position: 'relative', zIndex: 1, height: '1px', backgroundColor: 'rgba(200,130,42,0.2)', marginBottom: '0' }} aria-hidden="true" />
+      <div
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', backgroundColor: 'rgba(200,130,42,0.2)', zIndex: 1 }}
+        aria-hidden="true"
+      />
 
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(72px, 10vw, 112px) clamp(24px, 5vw, 64px) 0', position: 'relative', zIndex: 1 }}>
-
-        {/* Header */}
+      <div
+        style={{
+          maxWidth: '680px',
+          width: '100%',
+          margin: '0 auto',
+          padding: 'clamp(48px, 8vh, 80px) clamp(24px, 5vw, 48px)',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {/* Eyebrow */}
         <motion.p
-          initial={{ opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={shouldReduceMotion ? {} : { duration: 0.5 }}
           className="type-eyebrow text-center"
-          style={{ color: 'var(--color-accent)', marginBottom: '12px' }}
+          style={{ color: 'var(--color-accent)', marginBottom: '10px' }}
         >
           Wawel Restó
         </motion.p>
 
+        {/* Title */}
         <motion.h2
-          initial={{ opacity: 0, y: 16 }}
+          initial={shouldReduceMotion ? {} : { opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] as const, delay: 0.1 }}
+          transition={shouldReduceMotion ? {} : { duration: 0.6, ease: [0.23, 1, 0.32, 1] as const, delay: 0.08 }}
           className="text-center"
           style={{
             color: '#F2E8D5',
             fontFamily: 'var(--font-heading)',
             fontStyle: 'italic',
             fontWeight: 400,
-            fontSize: 'clamp(2.2rem, 4.5vw, 3.6rem)',
+            fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
             lineHeight: 1.1,
-            marginBottom: '10px',
+            marginBottom: '8px',
           }}
         >
           {rs.title}
         </motion.h2>
 
+        {/* Subtitle */}
         <motion.p
-          initial={{ opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15 }}
+          transition={shouldReduceMotion ? {} : { duration: 0.5, delay: 0.13 }}
           className="text-center"
-          style={{ color: 'rgba(242,232,213,0.45)', fontFamily: 'var(--font-heading)', fontStyle: 'italic', fontSize: 'clamp(1rem, 1.8vw, 1.25rem)', marginBottom: 'clamp(40px, 6vw, 64px)' }}
+          style={{
+            color: 'rgba(242,232,213,0.4)',
+            fontFamily: 'var(--font-heading)',
+            fontStyle: 'italic',
+            fontSize: 'clamp(0.85rem, 1.4vw, 1rem)',
+            marginBottom: 'clamp(24px, 4vh, 36px)',
+          }}
         >
           {rs.subtitle}
         </motion.p>
 
-        {/* Contact cards — outlined style */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: 'clamp(40px, 6vw, 64px)' }}>
+        {/* Contact cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: 'clamp(24px, 4vh, 36px)' }}>
           <ContactCard
             href={`tel:${rs.phone.replace(/\s/g, '')}`}
             label={rs.phoneLabel}
             number={rs.phone}
-            hint="Toca para llamar"
+            hint={rs.phoneHint}
             delay={0.1}
           />
           <ContactCard
             href={`https://wa.me/${rs.whatsapp.replace(/[\s+]/g, '')}`}
             label={rs.whatsappLabel}
             number={rs.whatsapp}
-            hint="Abrir WhatsApp"
-            delay={0.2}
+            hint={rs.whatsappHint}
+            delay={0.18}
             target="_blank"
           />
         </div>
 
-        {/* Hours — editorial table style */}
+        {/* Hours — no box, just rows */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] as const, delay: 0.25 }}
-          style={{ border: '1px solid rgba(200,130,42,0.18)', borderRadius: '2px', padding: 'clamp(28px, 4vw, 44px)' }}
+          transition={shouldReduceMotion ? {} : { duration: 0.55, ease: [0.23, 1, 0.32, 1] as const, delay: 0.22 }}
         >
-          <h3
-            className="text-center"
-            style={{
-              color: '#F2E8D5',
-              fontFamily: 'var(--font-heading)',
-              fontStyle: 'italic',
-              fontWeight: 400,
-              fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
-              letterSpacing: '0.04em',
-              marginBottom: 'clamp(24px, 3vw, 36px)',
-            }}
+          <p
+            className="type-eyebrow text-center"
+            style={{ color: 'rgba(242,232,213,0.35)', marginBottom: '14px' }}
           >
             {rs.hoursTitle}
-          </h3>
+          </p>
 
-          <div style={{ maxWidth: '400px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <div style={{ maxWidth: '360px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0' }}>
             {HOURS.map(({ dayKey, hoursKey }, i) => (
               <motion.div
                 key={dayKey}
-                initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -12 }}
+                initial={shouldReduceMotion ? {} : { opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] as const, delay: 0.3 + i * 0.07 }}
+                transition={shouldReduceMotion ? {} : { duration: 0.4, ease: [0.23, 1, 0.32, 1] as const, delay: 0.28 + i * 0.06 }}
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'baseline',
-                  padding: '12px 0',
-                  borderBottom: '1px solid rgba(200,130,42,0.1)',
+                  padding: '9px 0',
+                  borderBottom: '1px solid rgba(200,130,42,0.08)',
                   gap: '16px',
                 }}
               >
-                <span style={{ color: 'rgba(242,232,213,0.6)', fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 300 }}>
+                <span style={{ color: 'rgba(242,232,213,0.55)', fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 300 }}>
                   {rs[dayKey]}
                 </span>
-                <span style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-heading)', fontStyle: 'italic', fontSize: '18px', fontWeight: 400, flexShrink: 0 }}>
+                <span style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-heading)', fontStyle: 'italic', fontSize: '15px', fontWeight: 400, flexShrink: 0 }}>
                   {rs[hoursKey]}
                 </span>
               </motion.div>
             ))}
           </div>
 
-          <div style={{ marginTop: 'clamp(20px, 3vw, 32px)', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <p style={{ color: 'rgba(242,232,213,0.35)', fontFamily: 'var(--font-body)', fontSize: '13px' }}>
-              {rs.priceRange}
-            </p>
-            <p style={{ color: 'rgba(242,232,213,0.35)', fontFamily: 'var(--font-heading)', fontStyle: 'italic', fontSize: '14px' }}>
-              {rs.groupsNote}
-            </p>
-          </div>
+          {/* Bottom note */}
+          <p style={{ color: 'rgba(242,232,213,0.28)', fontFamily: 'var(--font-heading)', fontStyle: 'italic', fontSize: '13px', textAlign: 'center', marginTop: '20px' }}>
+            {rs.groupsNote}
+          </p>
         </motion.div>
-
       </div>
     </section>
   );
