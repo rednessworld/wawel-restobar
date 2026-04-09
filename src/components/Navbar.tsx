@@ -84,7 +84,7 @@ export default function Navbar() {
           zIndex: 9999,
           pointerEvents: 'none',
           width: '960px',
-          maxWidth: 'calc(100vw - 32px)',
+          maxWidth: 'calc(100vw - 24px)',
         }}
         role="navigation"
         aria-label="Navegación principal"
@@ -237,32 +237,20 @@ export default function Navbar() {
           {isMobile && (
             <div
               style={{
-                padding: '0 20px',
+                padding: '0 12px 0 16px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 height: '56px',
               }}
             >
-              {/* Mobile logo */}
-              <button
-                onClick={handleLogoClick}
-                aria-label="Wawel Restó"
-                style={{ position: 'relative', width: '44px', height: '34px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-              >
-                <Image
-                  src="/images/Logo.png"
-                  alt="Wawel Restó"
-                  fill
-                  style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
-                  priority
-                />
-              </button>
+              {/* Left spacer — empty for symmetry with hamburger on right */}
+              <div style={{ width: '44px' }} aria-hidden="true" />
 
-              {/* Language + hamburger */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {/* Right: ES + PL language + hamburger */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                 <div style={{ display: 'flex' }}>
-                  {languages.map((lang) => (
+                  {(['es', 'pl'] as Language[]).map((lang) => (
                     <button
                       key={lang}
                       onClick={() => setLanguage(lang)}
@@ -273,7 +261,7 @@ export default function Navbar() {
                         textTransform: 'uppercase',
                         padding: '0 6px',
                         minHeight: '44px',
-                        minWidth: '36px',
+                        minWidth: '32px',
                         border: 'none',
                         background: 'transparent',
                         cursor: 'pointer',
@@ -293,7 +281,7 @@ export default function Navbar() {
                   aria-expanded={menuOpen}
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer',
-                    padding: '8px', minWidth: '44px', minHeight: '44px',
+                    padding: '8px 4px 8px 8px', minWidth: '44px', minHeight: '44px',
                     display: 'flex', flexDirection: 'column', gap: '5px',
                     alignItems: 'center', justifyContent: 'center',
                   }}
