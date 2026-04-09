@@ -245,9 +245,9 @@ export default function Navbar() {
                 height: '56px',
               }}
             >
-              {/* LEFT — language switcher (ES · PL) */}
+              {/* LEFT — language switcher (ES · EN · PL) */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                {(['es', 'pl'] as Language[]).map((lang) => (
+                {(['es', 'en', 'pl'] as Language[]).map((lang) => (
                   <button
                     key={lang}
                     onClick={() => setLanguage(lang)}
