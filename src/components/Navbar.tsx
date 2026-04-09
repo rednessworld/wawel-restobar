@@ -237,51 +237,53 @@ export default function Navbar() {
           {isMobile && (
             <div
               style={{
-                padding: '0 12px 0 16px',
-                display: 'flex',
+                padding: '0 8px',
+                display: 'grid',
+                gridTemplateColumns: '1fr auto 1fr',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                width: '100%',
                 height: '56px',
               }}
             >
-              {/* Left spacer — empty for symmetry with hamburger on right */}
-              <div style={{ width: '44px' }} aria-hidden="true" />
+              {/* LEFT — language switcher (ES · PL) */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                {(['es', 'pl'] as Language[]).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setLanguage(lang)}
+                    style={{
+                      fontFamily: 'var(--font-navbar)',
+                      fontSize: '10px',
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                      padding: '0 8px',
+                      minHeight: '44px',
+                      minWidth: '32px',
+                      border: 'none',
+                      background: 'transparent',
+                      cursor: 'pointer',
+                      color: language === lang ? '#C8822A' : 'rgba(242,232,213,0.35)',
+                      transition: 'color 200ms ease-out',
+                    }}
+                    aria-pressed={language === lang}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
 
-              {/* Right: ES + PL language + hamburger */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                <div style={{ display: 'flex' }}>
-                  {(['es', 'pl'] as Language[]).map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => setLanguage(lang)}
-                      style={{
-                        fontFamily: 'var(--font-navbar)',
-                        fontSize: '10px',
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        padding: '0 6px',
-                        minHeight: '44px',
-                        minWidth: '32px',
-                        border: 'none',
-                        background: 'transparent',
-                        cursor: 'pointer',
-                        color: language === lang ? '#C8822A' : 'rgba(242,232,213,0.35)',
-                        transition: 'color 200ms ease-out',
-                      }}
-                      aria-pressed={language === lang}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
+              {/* CENTER — placeholder for the absolute-positioned medallion */}
+              <div style={{ width: '100px' }} aria-hidden="true" />
 
+              {/* RIGHT — hamburger */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                 <button
                   onClick={() => setMenuOpen((o) => !o)}
                   aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                   aria-expanded={menuOpen}
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer',
-                    padding: '8px 4px 8px 8px', minWidth: '44px', minHeight: '44px',
+                    padding: '8px', minWidth: '44px', minHeight: '44px',
                     display: 'flex', flexDirection: 'column', gap: '5px',
                     alignItems: 'center', justifyContent: 'center',
                   }}
